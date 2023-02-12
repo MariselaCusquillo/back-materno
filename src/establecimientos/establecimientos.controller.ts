@@ -4,11 +4,12 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { CreateEstablecimientoDto } from './dto/create-establecimiento.dto';
 import { UpdateEstablecimientoDto } from './dto/update-establecimiento.dto';
 
+
 @Controller('establecimientos')
 export class EstablecimientosController {
   constructor(private readonly establecimientosService: EstablecimientosService) {}
 
-  @Post()
+  @Post('crear')
   create(@Body() createEstablecimientoDto: CreateEstablecimientoDto) {
     return this.establecimientosService.create(createEstablecimientoDto);
   }

@@ -63,8 +63,8 @@ export class EstablecimientosService {
     } else{
       if (!establecimiento)
       throw new NotFoundException(`Establecimiento con ID: ${term} no encontrado`);
-      return establecimiento;
     }
+    return establecimiento;
     
   }
 
@@ -85,6 +85,7 @@ export class EstablecimientosService {
 
   async remove(id: string) {
     const deleteEstabl = await this.findOne(id);
+    console.log(deleteEstabl)
     await this.establecimientoRepository.remove(deleteEstabl);
   }
 

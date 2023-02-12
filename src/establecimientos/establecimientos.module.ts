@@ -13,5 +13,8 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule,
     TypeOrmModule.forFeature([Establecimiento]),
   ],
+  exports:[
+    EstablecimientosModule
+  ]
 })
 export class EstablecimientosModule {}

@@ -89,7 +89,7 @@ export class UsuarioService {
 
   async loginUser(authDto: AuthDto) {
     const { user, password } = authDto;
-
+    //console.log(user,password);
     const user_info = await this.usuarioRepository.findOne({
       where: { user },
       select: {
@@ -99,13 +99,15 @@ export class UsuarioService {
         id_usuario: true,
       },
     });
-
-    if (!user) {
-      throw new UnauthorizedException('Credentials are not valid.');
+    //console.log("datis =>",user_info);
+    if (!user_info) {
+      throw new UnauthorizedException('Las credenciales no son válidas');
+      return;
     }
     if (!bcrypt.compareSync(password, user_info.password)) {
-      throw new UnauthorizedException('Credentials are not valid.');
+      throw new UnauthorizedException('Las credenciales no son válidas');
     }
+    //console.log("paso ifs")
     return {
       ok: true,
       ...user_info,
