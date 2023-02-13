@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import {BadRequestException, Injectable,NotFoundException,} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorHandleDBService } from 'src/common/services/errorHandleDBException';
 import { CreateEstablecimientoDto } from './dto/create-establecimiento.dto';
@@ -23,6 +19,17 @@ export class EstablecimientosService {
 
   
   async create(createEstablecimientoDto: CreateEstablecimientoDto) {
+
+    //verificar si ya existe el establ
+   const establExist = await this.establecimientoRepository.findOne({
+      where: {
+        establecimiento: createEstablecimientoDto.establecimiento,
+      },
+   });
+
+   if(establExist){
+      throw new BadRequestException ('El establecimiento ya se encuentra registrado');
+   }else{
     try {
       const { ...establecimientoData } = createEstablecimientoDto;
       const establecimiento = this.establecimientoRepository.create({
@@ -33,11 +40,14 @@ export class EstablecimientosService {
     } catch (error) {
       this.errorHandleDBException.errorHandleDBException(error);
     }
+
+   }
+
   }
 
   async findAll(paginationDto: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDto;
-
+  
     return this.establecimientoRepository.find({
       take: limit,
       skip: offset,
@@ -51,18 +61,18 @@ export class EstablecimientosService {
     return `This action returns a #${id} establecimiento`;
   }*/
 
-  async findOne(term: string) {
+  async findOne(id: string) {
     let establecimiento: Establecimiento;
 
-    if (isUUID(term)) {
+    if (isUUID(id)) {
       establecimiento = await this.establecimientoRepository.findOne({
         where: {
-          id_establecimiento: term,
+          id_establecimiento: id,
         },
       });
     } else{
       if (!establecimiento)
-      throw new NotFoundException(`Establecimiento con ID: ${term} no encontrado`);
+      throw new NotFoundException(`Establecimiento con ID: ${id} no encontrado`);
     }
     return establecimiento;
     

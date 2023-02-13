@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuarioModule } from './usuario/usuario.module';
 import { EstablecimientosModule } from './establecimientos/establecimientos.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -19,6 +20,7 @@ import { EstablecimientosModule } from './establecimientos/establecimientos.modu
     }),
     UsuarioModule,
     EstablecimientosModule,
+    
   ],
   controllers: [],
   providers: [],

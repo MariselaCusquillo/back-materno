@@ -21,9 +21,9 @@ export class EstablecimientosController {
   }
 
 
-  @Get('buscar/:term')
-  findOne(@Param('term') term: string) {
-    return this.establecimientosService.findOne(term);
+  @Get('buscar/:id')
+  findOne(@Param('id') id: string) {
+    return this.establecimientosService.findOne(id);
   }
 
   @Patch('update/:id')

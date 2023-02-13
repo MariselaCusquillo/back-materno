@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import {Controller,Get,Post,Body,Patch,Param,Delete,Query,ParseUUIDPipe} from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -29,14 +19,15 @@ export class UsuarioController {
     return this.usuarioService.loginUser(authDto);
   }
 
-  @Get('list')
+
+  @Get('listar')
   findAll(@Query() paginationDto: PaginationDto) {
     return this.usuarioService.findAll(paginationDto);
   }
 
-  @Get('search/:term')
-  findOne(@Param('term') term: string) {
-    return this.usuarioService.findOne(term);
+  @Get('buscar/:id')
+  findOne(@Param('id') id: string) {
+    return this.usuarioService.findOne(id);
   }
 
   @Patch('update/:id')
@@ -51,6 +42,7 @@ export class UsuarioController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usuarioService.remove(id);
   }
+
 
   
 }

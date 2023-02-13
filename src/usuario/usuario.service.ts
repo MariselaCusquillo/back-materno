@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import {Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorHandleDBService } from 'src/common/services/errorHandleDBException';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -15,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthDto } from './dto/auth.dto';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UsuarioService {
@@ -26,6 +23,16 @@ export class UsuarioService {
   ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
+    //verificar si ya existe el user
+   const userExist = await this.usuarioRepository.findOne({
+    where: {
+      user: createUsuarioDto.user,
+    },
+ });
+
+ if(userExist){
+  throw new BadRequestException('La cuenta ya se encuentra registrada');
+ }else{
     try {
       const { password, ...usuarioData } = createUsuarioDto;
       const usuario = this.usuarioRepository.create({
@@ -33,10 +40,12 @@ export class UsuarioService {
         password: bcrypt.hashSync(password, 10),
       });
       await this.usuarioRepository.save(usuario);
+      delete usuario.password;
       return usuario;
     } catch (error) {
       this.errorHandleDBException.errorHandleDBException(error);
     }
+  }
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -48,13 +57,13 @@ export class UsuarioService {
     });
   }
 
-  async findOne(term: string) {
+  async findOne(id: string) {
     let user: Usuario;
     try {
-      if (isUUID(term)) {
+      if (isUUID(id)) {
         user = await this.usuarioRepository.findOne({
           where: {
-            id_usuario: term,
+            id_usuario: id,
           },
         });
       } 
@@ -63,7 +72,7 @@ export class UsuarioService {
     }
     
     if (!user)
-      throw new NotFoundException(`Usuario con ID: ${term} no encontrado`);
+      throw new NotFoundException(`Usuario con ID: ${id} no encontrado`);
     return user;
   }
 
@@ -109,8 +118,9 @@ export class UsuarioService {
     }
     //console.log("paso ifs")
     return {
-      ok: true,
-      ...user_info,
+      Ok: true,
+      //precaución inSQL !!
+      //...user_info,
       token: this.getJwtToken({ id_usuario: user_info.id_usuario }),
     };
   }
@@ -119,4 +129,6 @@ export class UsuarioService {
     const token = this.jwtService.sign(payload);
     return token;
   }
+
+  
 }
