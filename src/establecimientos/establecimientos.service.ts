@@ -28,7 +28,11 @@ export class EstablecimientosService {
    });
 
    if(establExist){
-      throw new BadRequestException ('El establecimiento ya se encuentra registrado');
+      
+    //throw new BadRequestException ('El establecimiento ya se encuentra registrado');
+      return {
+        existe: true
+      }
    }else{
     try {
       const { ...establecimientoData } = createEstablecimientoDto;
@@ -78,13 +82,13 @@ export class EstablecimientosService {
     
   }
 
-  async update(id: string, updateEstablecimientoDto: UpdateEstablecimientoDto) {
+  async update(id: string, updateEstablecimientoDto) {
+    //console.log(id,updateEstablecimientoDto);
     const establecimiento = await this.establecimientoRepository.preload({
       id_establecimiento: id,
       ...updateEstablecimientoDto,
     });
-    if (!establecimiento)
-      throw new NotFoundException(`Establecimiento con ID: ${id} no encontrado`);
+    if (!establecimiento)throw new NotFoundException(`Establecimiento con ID: ${id} no encontrado`);
     try {
       await this.establecimientoRepository.save(establecimiento);
       return establecimiento;
@@ -94,8 +98,9 @@ export class EstablecimientosService {
   }
 
   async remove(id: string) {
+    //console.log(id);
     const deleteEstabl = await this.findOne(id);
-    console.log(deleteEstabl)
+    //console.log(deleteEstabl)
     await this.establecimientoRepository.remove(deleteEstabl);
   }
 

@@ -31,7 +31,10 @@ export class UsuarioService {
  });
 
  if(userExist){
-  throw new BadRequestException('La cuenta ya se encuentra registrada');
+    return {
+      existe: true
+    }
+  //throw new BadRequestException('La cuenta ya se encuentra registrada');
  }else{
     try {
       const { password, ...usuarioData } = createUsuarioDto;
@@ -68,6 +71,7 @@ export class UsuarioService {
         });
       } 
     } catch (error) {
+
       this.errorHandleDBException.errorHandleDBException(error);
     }
     
@@ -76,7 +80,7 @@ export class UsuarioService {
     return user;
   }
 
-  async update(id: string, updateUsuarioDto: UpdateUsuarioDto) {
+  async update(id: string, updateUsuarioDto) {
     const user = await this.usuarioRepository.preload({
       id_usuario: id,
       ...updateUsuarioDto,
