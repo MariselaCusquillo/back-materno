@@ -11,7 +11,13 @@ import * as bcrypt from 'bcrypt';
 import { AuthDto } from './dto/auth.dto';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import { ChangePasswordDto } from './dto/changePassword.dto';
+
+
+
+
+
+
 
 @Injectable()
 export class UsuarioService {
@@ -124,7 +130,7 @@ export class UsuarioService {
     return {
       Ok: true,
       //precaución inSQL !!
-      //...user_info,
+      ...user_info,
       token: this.getJwtToken({ id_usuario: user_info.id_usuario }),
     };
   }
@@ -133,6 +139,62 @@ export class UsuarioService {
     const token = this.jwtService.sign(payload);
     return token;
   }
+
+
+
+   async changePassword(
+    id: string,
+    change: ChangePasswordDto
+  ) {
+    const {oldPassword,newPassword} = change;
+    const user = await this.usuarioRepository.findOne({
+      where: {
+        id_usuario: id,
+      },
+      select: {
+        user: true,
+        password: true,
+        role: true,
+        id_usuario: true,
+      }
+    });
+    //console.log(user);
+    if (!user) {
+      return{
+        status: false,
+        message:'El usuario no existe'
+      }
+    }
+
+    const passwordMatch = await bcrypt.compareSync(oldPassword, user.password);
+
+    if (!passwordMatch) {
+      return{
+        status: false,
+        message: 'La contraseña antigua es incorrecta'
+      } 
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    user.password = hashedPassword;
+    try{
+      await this.usuarioRepository.save(user);
+      return{
+        status: true,
+        message:'Contraseña actualizada con éxito'
+      }
+    }catch{
+      return{
+        status:false,
+        error: 'Ocurrio algo al cambiar la contraseña.'
+      }
+    }
+  }
+  
+
+  
 
   
 }

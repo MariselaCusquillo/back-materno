@@ -1,9 +1,18 @@
-import {Controller,Get,Post,Body,Patch,Param,Delete,Query,ParseUUIDPipe} from '@nestjs/common';
+import {Controller,Get,Post,Body,Patch,Param,Delete,Query,ParseUUIDPipe,  UnauthorizedException, Req} from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { AuthDto } from './dto/auth.dto';
+import { Usuario } from './entities/usuario.entity';
+
+
+//import { UseGuards } from '@nestjs/common';
+import { ChangePasswordDto } from './dto/changePassword.dto';
+
+
+
+
 
 @Controller('user')
 export class UsuarioController {
@@ -42,6 +51,18 @@ export class UsuarioController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usuarioService.remove(id);
   }
+  
+
+  
+  @Patch('change-password/:id_usuario')
+  async changePassword(@Body() changePasswordDto: ChangePasswordDto,@Param('id_usuario') id_usuario: string) {
+    const user = await this.usuarioService.changePassword(id_usuario, changePasswordDto);
+    return user;
+  }
+
+
+  
+  
 
 
   
