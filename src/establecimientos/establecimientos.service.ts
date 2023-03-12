@@ -19,21 +19,22 @@ export class EstablecimientosService {
 
   
   async create(createEstablecimientoDto: CreateEstablecimientoDto) {
-
+    //console.log('entro a create')
     //verificar si ya existe el establ
    const establExist = await this.establecimientoRepository.findOne({
       where: {
         establecimiento: createEstablecimientoDto.establecimiento,
       },
    });
-
    if(establExist){
+     //console.log('entro a existe');
       
     //throw new BadRequestException ('El establecimiento ya se encuentra registrado');
       return {
         existe: true
       }
    }else{
+    //console.log('entro a no exuzte');
     try {
       const { ...establecimientoData } = createEstablecimientoDto;
       const establecimiento = this.establecimientoRepository.create({
@@ -57,8 +58,6 @@ export class EstablecimientosService {
       skip: offset,
     });
   }
-
-
 
 
   /*findOne(id: number) {

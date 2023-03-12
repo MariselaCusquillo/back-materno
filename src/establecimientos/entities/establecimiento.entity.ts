@@ -5,6 +5,12 @@ export class Establecimiento {
     @PrimaryGeneratedColumn('uuid')
     id_establecimiento: string;
 
+    @Column({
+      type: 'smallint',
+      unique: true,
+      nullable: false,
+    })
+    unicodigo: number;
 
     @Column({
         type: 'text',
@@ -19,6 +25,20 @@ export class Establecimiento {
       })
     provincia: string;
 
+    @Column({
+      type: 'text',
+      nullable: false,
+    })
+    canton: string;
+
+
+    @Column({
+      type: 'text',
+      nullable: false,
+    })
+   parroquia: string;
+
+    
     @Column({
         type: 'text',
         nullable: false,

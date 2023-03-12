@@ -13,12 +13,6 @@ import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 
-
-
-
-
-
-
 @Injectable()
 export class UsuarioService {
   constructor(
@@ -118,10 +112,10 @@ export class UsuarioService {
         id_usuario: true,
       },
     });
-    //console.log("datis =>",user_info);
+    //console.log("datos =>",user_info);
     if (!user_info) {
       throw new UnauthorizedException('Las credenciales no son válidas');
-      return;
+      
     }
     if (!bcrypt.compareSync(password, user_info.password)) {
       throw new UnauthorizedException('Las credenciales no son válidas');
@@ -188,7 +182,7 @@ export class UsuarioService {
     }catch{
       return{
         status:false,
-        error: 'Ocurrio algo al cambiar la contraseña.'
+        error: 'Ocurrio algo al cambiar la contraseña'
       }
     }
   }

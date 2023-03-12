@@ -1,5 +1,9 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 export class CreateEstablecimientoDto {
+
+    @IsNumber()
+    @IsNotEmpty()
+    unicodigo: number;
 
     @IsString()
     @IsNotEmpty()
@@ -8,6 +12,17 @@ export class CreateEstablecimientoDto {
     @IsString()
     @IsNotEmpty()
     provincia: string;
+
+   @IsString()
+    @IsNotEmpty()
+    canton: string;
+    
+    
+    @IsString()
+    @IsNotEmpty()
+    parroquia: string;
+
+    
 
     @IsString()
     @IsNotEmpty()
