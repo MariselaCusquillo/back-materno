@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuarioModule } from './usuario/usuario.module';
 import { EstablecimientosModule } from './establecimientos/establecimientos.module';
+import { Indicador1Module } from './indicador1/indicador1.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { EstablecimientosModule } from './establecimientos/establecimientos.modu
     }),
     UsuarioModule,
     EstablecimientosModule,
+    Indicador1Module,
     
   ],
   controllers: [],
